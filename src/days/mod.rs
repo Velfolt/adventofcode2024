@@ -9,5 +9,7 @@ pub trait AocDay {
 }
 
 mod day1;
+mod day2;
 
 pub struct Day1;
+pub struct Day2;
