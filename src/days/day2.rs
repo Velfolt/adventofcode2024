@@ -1,6 +1,4 @@
-use itertools::Itertools;
-
-use crate::{aoc_iteratorutils::AdventOfCodeIteratorUtils, read_lines};
+use crate::read_lines;
 
 use super::{AocDay, Day2};
 

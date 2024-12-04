@@ -11,7 +11,9 @@ pub trait AocDay {
 mod day1;
 mod day2;
 mod day3;
+mod day4;
 
 pub struct Day1;
 pub struct Day2;
 pub struct Day3;
+pub struct Day4;

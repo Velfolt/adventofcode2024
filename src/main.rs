@@ -3,7 +3,6 @@ use std::{
     io::{self, BufRead},
 };
 
-// use aoc_iteratorutils::AdventOfCodeIteratorUtils;
 use days::AocDay;
 
 mod aoc_iteratorutils;
@@ -13,6 +12,7 @@ fn main() {
     days::Day1::perform();
     days::Day2::perform();
     days::Day3::perform();
+    days::Day4::perform();
 }
 
 pub fn read_lines(filename: &str) -> io::Lines<io::BufReader<File>> {
