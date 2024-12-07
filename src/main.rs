@@ -13,6 +13,7 @@ fn main() {
     days::Day2::perform();
     days::Day3::perform();
     days::Day4::perform();
+    days::Day5::perform();
 }
 
 pub fn read_lines(filename: &str) -> io::Lines<io::BufReader<File>> {
