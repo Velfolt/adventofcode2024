@@ -1,29 +1,17 @@
 use std::cmp::Ordering;
 
-use itertools::Itertools;
 use nom::{
     bytes::complete::tag,
     character::complete::{char, digit1},
     combinator::map_res,
     multi::separated_list0,
-    sequence::{pair, separated_pair},
+    sequence::separated_pair,
     IResult,
 };
 
-use crate::{aoc_iteratorutils::AdventOfCodeIteratorUtils, read_lines};
+use crate::read_to_separated_string;
 
 use super::{AocDay, Day5};
-
-fn read_to_separated_string(filename: &str, sep: &str) -> String {
-    let input = read_lines(filename)
-        .map(|line| {
-            let line = line.unwrap();
-            line
-        })
-        .join(sep);
-
-    input
-}
 
 fn rule(input: &str) -> IResult<&str, (usize, usize)> {
     separated_pair(

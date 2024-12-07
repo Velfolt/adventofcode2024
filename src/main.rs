@@ -4,9 +4,11 @@ use std::{
 };
 
 use days::AocDay;
+use itertools::Itertools;
 
 mod aoc_iteratorutils;
 mod days;
+mod utils;
 
 fn main() {
     days::Day1::perform();
@@ -14,9 +16,37 @@ fn main() {
     days::Day3::perform();
     days::Day4::perform();
     days::Day5::perform();
+    days::Day6::perform();
 }
 
 pub fn read_lines(filename: &str) -> io::Lines<io::BufReader<File>> {
     let file = File::open(filename).unwrap();
     io::BufReader::new(file).lines()
+}
+
+pub fn read_into_chars(filename: &str) -> (usize, Vec<char>) {
+    let mut width = 0;
+
+    let input = read_lines(filename)
+        .map(|line| {
+            let line = line.unwrap();
+            width = line.len();
+            line
+        })
+        .join("")
+        .chars()
+        .collect_vec();
+
+    (width, input)
+}
+
+pub fn read_to_separated_string(filename: &str, sep: &str) -> String {
+    let input = read_lines(filename)
+        .map(|line| {
+            let line = line.unwrap();
+            line
+        })
+        .join(sep);
+
+    input
 }

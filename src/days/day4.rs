@@ -1,26 +1,10 @@
 use itertools::Itertools;
 
-use crate::read_lines;
+use crate::{read_into_chars, read_lines};
 
 use super::{AocDay, Day4};
 
 impl Day4 {
-    fn parse() -> (usize, Vec<char>) {
-        let mut width = 0;
-
-        let input = read_lines("inputs/day4.txt")
-            .map(|line| {
-                let line = line.unwrap();
-                width = line.len();
-                line
-            })
-            .join("")
-            .chars()
-            .collect_vec();
-
-        (width, input)
-    }
-
     fn search_word<'a>(
         width: &'a usize,
         directions: &'a Vec<(i32, i32)>,
@@ -67,7 +51,7 @@ impl Day4 {
 
 impl AocDay for Day4 {
     fn part1() {
-        let (width, input) = Self::parse();
+        let (width, input) = read_into_chars("inputs/day4.txt");
 
         let all_directions = vec![
             (1, 0),
@@ -86,7 +70,7 @@ impl AocDay for Day4 {
     }
 
     fn part2() {
-        let (width, input) = Self::parse();
+        let (width, input) = read_into_chars("inputs/day4.txt");
 
         let cross_directions = vec![(1, 1), (-1, 1), (-1, -1), (1, -1)];
 
