@@ -11,12 +11,13 @@ mod days;
 mod utils;
 
 fn main() {
-    days::Day1::perform();
-    days::Day2::perform();
-    days::Day3::perform();
-    days::Day4::perform();
-    days::Day5::perform();
-    days::Day6::perform();
+    // days::Day1::perform();
+    // days::Day2::perform();
+    // days::Day3::perform();
+    // days::Day4::perform();
+    // days::Day5::perform();
+    // days::Day6::perform();
+    days::Day7::perform();
 }
 
 pub fn read_lines(filename: &str) -> io::Lines<io::BufReader<File>> {
@@ -49,4 +50,8 @@ pub fn read_to_separated_string(filename: &str, sep: &str) -> String {
         .join(sep);
 
     input
+}
+
+pub fn read_into_string_iterator(filename: &str) -> impl Iterator<Item = String> {
+    read_lines(filename).map(|line| line.unwrap())
 }
