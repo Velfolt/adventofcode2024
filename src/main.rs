@@ -18,12 +18,25 @@ fn main() {
     // days::Day5::perform();
     // days::Day6::perform();
     // days::Day7::perform();
-    days::Day8::perform();
+    // days::Day8::perform();
+    days::Day9::perform();
 }
 
 pub fn read_lines(filename: &str) -> io::Lines<io::BufReader<File>> {
     let file = File::open(filename).unwrap();
     io::BufReader::new(file).lines()
+}
+
+pub fn read_into_ints(filename: &str) -> Vec<u32> {
+    read_lines(filename)
+        .map(|line| {
+            let line = line.unwrap();
+            line
+        })
+        .join("")
+        .chars()
+        .map(|c| c.to_digit(10).unwrap())
+        .collect()
 }
 
 pub fn read_into_chars(filename: &str) -> (usize, Vec<char>) {
