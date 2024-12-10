@@ -1,14 +1,23 @@
 use std::ops::{Add, Mul, Sub};
 
 pub trait PrintGrid {
-    fn print_grid(self, width: usize);
+    fn print_grid(&self, width: usize);
 }
 
 impl PrintGrid for Vec<char> {
-    fn print_grid(self, width: usize) {
+    fn print_grid(&self, width: usize) {
         for chunk in self.chunks(width) {
             let str: String = chunk.iter().collect();
             println!("{}", str);
+        }
+        println!("");
+    }
+}
+
+impl PrintGrid for Vec<u32> {
+    fn print_grid(&self, width: usize) {
+        for chunk in self.chunks(width) {
+            println!("{:?}", chunk);
         }
         println!("");
     }
@@ -52,6 +61,21 @@ impl Distance for ((i64, i64), (i64, i64)) {
     fn distance(self) -> usize {
         let (a, b) = self;
         ((a.0 - b.0).abs() + (a.1 - b.1).abs()) as usize
+    }
+}
+
+pub trait Directions {
+    fn directions(&self) -> [(i64, i64); 4];
+}
+
+impl Directions for (i64, i64) {
+    fn directions(&self) -> [(i64, i64); 4] {
+        [
+            (self.0 - 1, self.1),
+            (self.0 + 1, self.1),
+            (self.0, self.1 + 1),
+            (self.0, self.1 - 1),
+        ]
     }
 }
 
