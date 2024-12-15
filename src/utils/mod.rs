@@ -1,5 +1,7 @@
 use std::ops::{Add, Mul, Sub};
 
+use itertools::Itertools;
+
 pub trait PrintGrid {
     fn print_grid(&self, width: usize);
 }
@@ -17,7 +19,7 @@ impl PrintGrid for Vec<char> {
 impl PrintGrid for Vec<u32> {
     fn print_grid(&self, width: usize) {
         for chunk in self.chunks(width) {
-            println!("{:?}", chunk);
+            println!("{:?}", chunk.iter().map(|x| format!("{}", x)).join(""));
         }
         println!("");
     }
@@ -66,6 +68,7 @@ impl Distance for ((i64, i64), (i64, i64)) {
 
 pub trait Directions {
     fn directions(&self) -> [(i64, i64); 4];
+    fn all_directions(&self) -> [(i64, i64); 8];
 }
 
 impl Directions for (i64, i64) {
@@ -75,6 +78,19 @@ impl Directions for (i64, i64) {
             (self.0 + 1, self.1),
             (self.0, self.1 + 1),
             (self.0, self.1 - 1),
+        ]
+    }
+
+    fn all_directions(&self) -> [(i64, i64); 8] {
+        [
+            (self.0 - 1, self.1),
+            (self.0 - 1, self.1 - 1),
+            (self.0, self.1 - 1),
+            (self.0 + 1, self.1 + 1),
+            (self.0 + 1, self.1),
+            (self.0 + 1, self.1 + 1),
+            (self.0, self.1 + 1),
+            (self.0 - 1, self.1 + 1),
         ]
     }
 }
