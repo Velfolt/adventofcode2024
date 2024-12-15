@@ -97,60 +97,75 @@ impl AocDay for Day12 {
         }
 
         let price: usize = buf
-            .values()
-            .map(|plots| {
+            .iter()
+            .map(|((_, _), plots)| {
                 let a = plots.len();
 
-                let sides = plots
+                let outer_corners = plots
+                    .clone()
                     .iter()
-                    .filter(|pos| pos.directions().iter().any(|x| !plots.contains(x)))
-                    .collect_vec();
+                    .map(|pos| {
+                        let corners = [
+                            (Point(*pos) + Point((0, -1)), Point(*pos) + Point((-1, 0))),
+                            (Point(*pos) + Point((0, 1)), Point(*pos) + Point((-1, 0))),
+                            (Point(*pos) + Point((0, 1)), Point(*pos) + Point((1, 0))),
+                            (Point(*pos) + Point((0, -1)), Point(*pos) + Point((1, 0))),
+                        ];
 
-                let perimeter = plots
-                    .iter()
-                    .flat_map(|pos| {
-                        pos.directions()
+                        corners
+                    })
+                    .flat_map(|corners| {
+                        corners
                             .iter()
-                            .filter(|x| !plots.contains(x))
-                            .cloned()
+                            .map(|(a, b)| !plots.contains(&a) && !plots.contains(&b))
                             .collect_vec()
                     })
-                    .count();
+                    .collect_vec();
 
-                let mut count = 0;
+                let inner_corners = plots
+                    .clone()
+                    .iter()
+                    .map(|pos| {
+                        let corners = [
+                            (
+                                Point(*pos) + Point((0, -1)),
+                                Point(*pos) + Point((-1, 0)),
+                                Point(*pos) + Point((-1, -1)),
+                            ),
+                            (
+                                Point(*pos) + Point((0, 1)),
+                                Point(*pos) + Point((-1, 0)),
+                                Point(*pos) + Point((-1, 1)),
+                            ),
+                            (
+                                Point(*pos) + Point((0, 1)),
+                                Point(*pos) + Point((1, 0)),
+                                Point(*pos) + Point((1, 1)),
+                            ),
+                            (
+                                Point(*pos) + Point((0, -1)),
+                                Point(*pos) + Point((1, 0)),
+                                Point(*pos) + Point((1, -1)),
+                            ),
+                        ];
 
-                let mut sides = VecDeque::from(sides);
+                        corners
+                    })
+                    .flat_map(|corners| {
+                        corners
+                            .iter()
+                            .map(|(a, b, c)| {
+                                plots.contains(&a) && plots.contains(&b) && !plots.contains(&c)
+                            })
+                            .collect_vec()
+                    })
+                    .collect_vec();
 
-                let mut prev = None;
+                let count = outer_corners.iter().filter(|x| **x == true).count()
+                    + inner_corners.iter().filter(|x| **x == true).count();
 
-                while !sides.is_empty() {
-                    let side = sides.pop_front().unwrap();
-
-                    let sorted = sides
-                        .iter()
-                        .sorted_by(|a, b| (*side, ***a).distance().cmp(&(*side, ***b).distance()))
-                        .take(1)
-                        .collect_vec();
-
-                    if let Some(next) = sorted.first() {
-                        let vec = Point(***next) - Point(*side);
-
-                        if let Some(prev) = prev {
-                            println!("prev {:?} vec {:?}", prev, vec);
-                            if vec != prev {
-                                count += 1;
-                            }
-                        }
-
-                        prev = Some(vec);
-                    }
-                }
-
-                println!("");
-
-                (a, perimeter - count)
+                (a, count)
             })
-            // .println()
             .map(|(a, b)| a * b)
             .sum();
 

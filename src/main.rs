@@ -22,10 +22,10 @@ fn main() {
     // days::Day9::perform();
     // days::Day10::perform();
     // days::Day11::perform();
-    // days::Day12::perform();
+    days::Day12::perform();
     // days::Day13::perform();
     // days::Day14::perform();
-    days::Day15::perform();
+    // days::Day15::perform();
 }
 
 pub fn read_lines(filename: &str) -> io::Lines<io::BufReader<File>> {
