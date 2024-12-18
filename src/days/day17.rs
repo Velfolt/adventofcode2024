@@ -101,9 +101,7 @@ fn run(program: &Vec<i64>, a: &i64, b: &i64, c: &i64) -> (Vec<i64>, (i64, i64, i
                 }
             }
             4 => b = b ^ c,
-            5 => {
-                output.push(combo(&operand, &a, &b, &c) % 8);
-            }
+            5 => output.push(combo(&operand, &a, &b, &c) % 8),
             6 => b = a / 2_f64.powf(combo(&operand, &a, &b, &c) as f64).trunc() as i64,
             7 => c = a / 2_f64.powf(combo(&operand, &a, &b, &c) as f64).trunc() as i64,
             _ => panic!(),

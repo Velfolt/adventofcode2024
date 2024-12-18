@@ -164,7 +164,7 @@ impl AocDay for Day16 {
     }
 }
 
-fn astar(
+pub fn astar(
     start: ((i64, i64), (i64, i64)),
     goal: (i64, i64),
     h: impl Fn(((i64, i64), (i64, i64))) -> i32,
