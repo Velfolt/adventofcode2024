@@ -1,11 +1,10 @@
-use std::collections::{HashMap, HashSet, VecDeque};
+use std::collections::{HashMap, HashSet};
 
 use itertools::Itertools;
 
 use crate::{
-    aoc_iteratorutils::AdventOfCodeIteratorUtils,
     read_into_chars,
-    utils::{Directions, Distance, IndexToPos, Point, PosToIndex, PosWithinBounds},
+    utils::{Directions, IndexToPos, Point, PosToIndex, PosWithinBounds},
 };
 
 use super::{AocDay, Day12};

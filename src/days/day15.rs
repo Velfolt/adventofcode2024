@@ -1,8 +1,8 @@
 use itertools::Itertools;
 
 use crate::{
-    read_lines, read_to_separated_string,
-    utils::{IndexToPos, Point, PosToIndex, PosWithinBounds, PrintGrid},
+    read_to_separated_string,
+    utils::{IndexToPos, Point, PosToIndex, PosWithinBounds},
 };
 
 use super::{AocDay, Day15};

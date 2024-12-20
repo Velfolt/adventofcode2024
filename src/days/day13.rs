@@ -1,4 +1,3 @@
-use itertools::Itertools;
 use nom::{
     bytes::complete::tag,
     character::complete::{anychar, digit1},
@@ -8,7 +7,7 @@ use nom::{
     IResult,
 };
 
-use crate::{aoc_iteratorutils::AdventOfCodeIteratorUtils, read_lines, read_to_separated_string};
+use crate::{aoc_iteratorutils::AdventOfCodeIteratorUtils, read_to_separated_string};
 
 use super::{AocDay, Day13};
 

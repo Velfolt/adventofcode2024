@@ -1,16 +1,14 @@
 use std::{
-    borrow::BorrowMut,
     cmp::Reverse,
-    collections::{BinaryHeap, HashMap, VecDeque},
+    collections::{BinaryHeap, HashMap},
     i32,
 };
 
-use itertools::{GroupingMap, Itertools};
+use itertools::Itertools;
 
 use crate::{
-    aoc_iteratorutils::AdventOfCodeIteratorUtils,
     read_into_chars,
-    utils::{Distance, IndexToPos, Point, PosToIndex, PrintGrid},
+    utils::{Distance, IndexToPos, Point, PosToIndex},
 };
 
 use super::{AocDay, Day16};
@@ -60,7 +58,7 @@ impl AocDay for Day16 {
                     _ => panic!(),
                 }
                 .iter()
-                .filter(|((pos, _))| grid[pos.to_index(width)] != '#')
+                .filter(|(pos, _)| grid[pos.to_index(width)] != '#')
                 .cloned()
                 .collect_vec()
             },
@@ -116,7 +114,7 @@ impl AocDay for Day16 {
                     _ => panic!(),
                 }
                 .iter()
-                .filter(|((pos, _))| grid[pos.to_index(width)] != '#')
+                .filter(|(pos, _)| grid[pos.to_index(width)] != '#')
                 .cloned()
                 .collect_vec()
             },
@@ -299,7 +297,7 @@ fn shortest_path(
 
     let mut output = vec![];
 
-    while let Some((mut out, previous_nodes)) = stack.pop() {
+    while let Some((out, previous_nodes)) = stack.pop() {
         if let Some(nodes) = previous_nodes {
             for x in nodes {
                 let mut out = out.clone();

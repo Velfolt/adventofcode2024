@@ -1,6 +1,6 @@
 use itertools::Itertools;
 
-use crate::{read_into_chars, read_lines};
+use crate::read_into_chars;
 
 use super::{AocDay, Day4};
 

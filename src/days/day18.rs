@@ -41,7 +41,7 @@ impl AocDay for Day18 {
                     (Point(pos) + Point((-1, 0)), dir),
                 ]
                 .iter()
-                .filter(|((pos, _))| pos.within_bounds(width) && grid[pos.to_index(width)] != '#')
+                .filter(|(pos, _)| pos.within_bounds(width) && grid[pos.to_index(width)] != '#')
                 .cloned()
                 .collect_vec()
             },
@@ -88,7 +88,7 @@ impl AocDay for Day18 {
                     (Point(pos) + Point((-1, 0)), dir),
                 ]
                 .iter()
-                .filter(|((pos, _))| pos.within_bounds(width) && grid[pos.to_index(width)] != '#')
+                .filter(|(pos, _)| pos.within_bounds(width) && grid[pos.to_index(width)] != '#')
                 .cloned()
                 .collect_vec()
             },

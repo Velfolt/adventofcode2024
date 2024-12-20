@@ -1,11 +1,11 @@
 use std::{
     cmp::Reverse,
-    collections::{BinaryHeap, HashMap, VecDeque},
+    collections::{BinaryHeap, HashMap},
 };
 
 use itertools::Itertools;
 
-use crate::{aoc_iteratorutils::AdventOfCodeIteratorUtils, read_to_separated_string};
+use crate::read_to_separated_string;
 
 use super::{AocDay, Day19};
 

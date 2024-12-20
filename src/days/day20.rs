@@ -3,10 +3,9 @@ use std::collections::HashMap;
 use itertools::Itertools;
 
 use crate::{
-    aoc_iteratorutils::AdventOfCodeIteratorUtils,
     days::day16::astar,
     read_into_chars,
-    utils::{Directions, Distance, IndexToPos, Point, PosToIndex, PosWithinBounds, PrintGrid},
+    utils::{Directions, Distance, IndexToPos, Point, PosToIndex, PosWithinBounds},
 };
 
 use super::{AocDay, Day20};
@@ -31,7 +30,7 @@ impl AocDay for Day20 {
                     (Point(pos) + Point((-1, 0)), dir),
                 ]
                 .iter()
-                .filter(|((pos, _))| grid[pos.to_index(width)] != '#')
+                .filter(|(pos, _)| grid[pos.to_index(width)] != '#')
                 .cloned()
                 .collect_vec()
             },
@@ -92,7 +91,7 @@ impl AocDay for Day20 {
                     (Point(pos) + Point((-1, 0)), dir),
                 ]
                 .iter()
-                .filter(|((pos, _))| grid[pos.to_index(width)] != '#')
+                .filter(|(pos, _)| grid[pos.to_index(width)] != '#')
                 .cloned()
                 .collect_vec()
             },

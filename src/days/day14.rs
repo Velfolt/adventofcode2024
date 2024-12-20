@@ -3,15 +3,11 @@ use nom::{
     bytes::complete::tag,
     character::complete::{char, digit1},
     combinator::{map_res, opt, recognize},
-    sequence::{pair, preceded, separated_pair},
+    sequence::{preceded, separated_pair},
     IResult,
 };
 
-use crate::{
-    aoc_iteratorutils::AdventOfCodeIteratorUtils,
-    read_lines,
-    utils::{PosToIndex, PrintGrid},
-};
+use crate::read_lines;
 
 use super::{AocDay, Day14};
 

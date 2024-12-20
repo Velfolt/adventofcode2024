@@ -1,7 +1,6 @@
 use core::panic;
 
 use itertools::Itertools;
-use nom::InputTakeAtPosition;
 
 use crate::read_to_separated_string;
 

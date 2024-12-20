@@ -4,7 +4,7 @@ use itertools::Itertools;
 
 use crate::{
     read_into_chars,
-    utils::{IndexToPos, Point, PosToIndex, PosWithinBounds, PrintGrid},
+    utils::{IndexToPos, Point, PosWithinBounds},
 };
 
 use super::{AocDay, Day8};
