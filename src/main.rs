@@ -31,12 +31,21 @@ fn main() {
     // days::Day18::perform();
     // days::Day19::perform();
     // days::Day20::perform();
-    days::Day21::perform();
+    // days::Day21::perform();
+    days::Day22::perform();
 }
 
 pub fn read_lines(filename: &str) -> io::Lines<io::BufReader<File>> {
     let file = File::open(filename).unwrap();
     io::BufReader::new(file).lines()
+}
+
+pub fn read_lines_into_strings(filename: &str) -> impl Iterator<Item = String> {
+    read_lines(filename).map(|line| line.unwrap())
+}
+
+pub fn read_lines_into_ints(filename: &str) -> impl Iterator<Item = i64> {
+    read_lines(filename).map(|line| line.unwrap().parse().unwrap())
 }
 
 pub fn read_into_ints(filename: &str) -> Vec<u32> {
