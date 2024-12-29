@@ -1,9 +1,14 @@
+use std::{collections::HashMap, iter};
+
 use itertools::Itertools;
 use nom::{
     bytes::complete::take_while,
     character::{complete::digit1, is_digit},
     combinator::{map, map_res},
     IResult, ParseTo,
+};
+use rayon::iter::{
+    IntoParallelRefIterator, IntoParallelRefMutIterator, ParallelBridge, ParallelIterator,
 };
 
 use crate::{
@@ -19,7 +24,7 @@ impl AocDay for Day21 {
         let codes = read_lines("inputs/day21.txt").map(|x| x.unwrap());
 
         let sum: usize = codes
-            .map(|code| (atoi(code.as_bytes()).unwrap().1, numeric_keypad2(&code)))
+            .map(|code| (atoi(code.as_bytes()).unwrap().1, numeric_keypad(&code)))
             .map(|(code, codes)| {
                 (
                     code,
@@ -40,35 +45,28 @@ impl AocDay for Day21 {
     fn part2() {
         let codes = read_lines("inputs/day21.txt").map(|x| x.unwrap());
 
+        let mut cache = HashMap::new();
+
         let sum: usize = codes
-            .println()
-            .map(|code| (atoi(code.as_bytes()).unwrap().1, numeric_keypad2(&code)))
+            .map(|code| (atoi(code.as_bytes()).unwrap().1, numeric_keypad(&code)))
             .map(|(code, codes)| {
                 let robot_code = codes
                     .iter()
-                    .map(|code| directional_keypad(code))
-                    .map(|code| directional_keypad(&code))
-                    .min_by(|a, b| a.len().cmp(&b.len()))
+                    .map(|code| directional_keypad_cached(code, 25, &mut cache))
+                    .min()
                     .unwrap();
 
                 (code, robot_code)
             })
-            .println()
-            // .map(|(code, numeric)| (code, directional_keypad2(&numeric)))
-            // .println()
-            // .map(|(code, directional)| (code, directional_keypad2(&directional)))
-            // .println()
-            .map(|(code, shortest_seq)| (code, shortest_seq.len()))
-            .println()
+            .map(|(code, shortest_seq)| (code, shortest_seq))
             .map(|(numeric, shortest_seq)| numeric as usize * shortest_seq)
-            .println()
             .sum();
 
         println!("sum of complexities: {sum}");
     }
 }
 
-fn atoi(input: &[u8]) -> IResult<&[u8], i64> {
+fn atoi(input: &[u8]) -> IResult<&[u8], usize> {
     map(take_while(is_digit), |s: &[u8]| s.parse_to().unwrap())(input)
 }
 
@@ -89,54 +87,7 @@ fn numeric_keypad_position(key: char) -> (i64, i64) {
     }
 }
 
-fn numeric_keypad(code: &str) -> String {
-    let mut output = vec![];
-
-    let mut current = 'A';
-    for c in code.chars() {
-        let mut current_pos = numeric_keypad_position(current);
-        let c_pos = numeric_keypad_position(c);
-
-        loop {
-            if c == current {
-                break;
-            }
-
-            let next_pos = current_pos
-                .directions()
-                .iter()
-                .cloned()
-                .filter(|pos| *pos != (0, 3))
-                .min_by(|a, b| (*a, c_pos).distance().cmp(&(*b, c_pos).distance()))
-                .unwrap();
-
-            println!("next pos {next_pos:?}");
-            let dir = Point(next_pos) - Point(current_pos);
-            let direction_char = match dir {
-                (1, 0) => '>',
-                (-1, 0) => '<',
-                (0, 1) => 'v',
-                (0, -1) => '^',
-                _ => panic!(),
-            };
-
-            output.push(direction_char);
-
-            if next_pos == c_pos {
-                break;
-            }
-
-            current_pos = next_pos.clone();
-        }
-
-        output.push('A');
-        current = c;
-    }
-
-    output.into_iter().join("")
-}
-
-fn numeric_keypad2(code: &str) -> Vec<String> {
+fn numeric_keypad(code: &str) -> Vec<String> {
     let mut stack = vec![(0, 'A', vec![], (2, 3))];
 
     let data = code.chars().collect_vec();
@@ -144,8 +95,6 @@ fn numeric_keypad2(code: &str) -> Vec<String> {
     let mut out = vec![];
 
     while let Some((c_i, current, possible, last_pos)) = stack.pop() {
-        // println!("{c_i} {current} {possible:?} {last_pos:?}");
-
         if c_i > data.len() - 1 {
             out.push(possible);
             continue;
@@ -259,108 +208,79 @@ fn directional_keypad(code: &str) -> String {
     output.into_iter().join("")
 }
 
-fn directional_keypad2(code: &str) -> String {
-    let mut output = vec![];
+fn directional_keypad_cached(
+    code: &str,
+    n: usize,
+    cache: &mut HashMap<(char, char, usize), usize>,
+) -> usize {
+    let mut result = 0;
 
-    let mut current = 'A';
-    for c in code.chars() {
-        let current_pos = directional_keypad_position(current);
-        let c_pos = directional_keypad_position(c);
+    for (start, end) in iter::once('A').chain(code.chars()).tuple_windows() {
+        result += directional_keypad_mapping(start, end, n, cache);
+    }
 
-        let out = match (current, c) {
-            _ if current == c => vec![],
-            ('A', '^') => vec!['<'],
-            ('A', '<') => vec!['v', '<', '<'],
-            ('A', 'v') => vec!['<', 'v'],
-            ('A', '>') => vec!['v'],
+    result
+}
 
-            ('^', '<') => vec!['v', '<'],
-            ('^', 'v') => vec!['v'],
-            ('^', '>') => vec!['v', '>'],
-            ('^', 'A') => vec!['>'],
+fn directional_keypad_mapping(
+    start: char,
+    end: char,
+    n: usize,
+    cache: &mut HashMap<(char, char, usize), usize>,
+) -> usize {
+    let mut result = 0;
 
-            ('<', '^') => vec!['>', '^'],
-            ('<', 'v') => vec!['>'],
-            ('<', '>') => vec!['>', '>'],
-            ('<', 'A') => vec!['>', '>', '^'],
+    if let Some(length) = cache.get(&(start, end, n)) {
+        result += length;
+    } else {
+        let out = match (start, end) {
+            _ if start == end => vec!['A'],
+            ('A', '^') => vec!['<', 'A'],
+            ('A', '<') => vec!['v', '<', '<', 'A'],
+            ('A', 'v') => vec!['<', 'v', 'A'],
+            ('A', '>') => vec!['v', 'A'],
 
-            ('v', '^') => vec!['^'],
-            ('v', '<') => vec!['<'],
-            ('v', '>') => vec!['>'],
-            ('v', 'A') => vec!['>', '^'],
+            ('^', '<') => vec!['v', '<', 'A'],
+            ('^', 'v') => vec!['v', 'A'],
+            ('^', '>') => vec!['v', '>', 'A'],
+            ('^', 'A') => vec!['>', 'A'],
 
-            ('>', '^') => vec!['^', '<'],
-            ('>', '<') => vec!['<', '<'],
-            ('>', 'v') => vec!['>'],
-            ('>', 'A') => vec!['^'],
+            ('<', '^') => vec!['>', '^', 'A'],
+            ('<', 'v') => vec!['>', 'A'],
+            ('<', '>') => vec!['>', '>', 'A'],
+            ('<', 'A') => vec!['>', '>', '^', 'A'],
+
+            ('v', '^') => vec!['^', 'A'],
+            ('v', '<') => vec!['<', 'A'],
+            ('v', '>') => vec!['>', 'A'],
+            ('v', 'A') => vec!['^', '>', 'A'],
+
+            ('>', '^') => vec!['<', '^', 'A'],
+            ('>', '<') => vec!['<', '<', 'A'],
+            ('>', 'v') => vec!['<', 'A'],
+            ('>', 'A') => vec!['^', 'A'],
 
             _ => panic!(),
         };
 
-        output.extend(out);
-        output.push('A');
+        result += out.len();
 
-        current = c;
-    }
-
-    output.into_iter().join("")
-}
-
-fn directional_keypad3(code: &str) -> String {
-    let mut output = vec![];
-
-    let mut current = 'A';
-    for c in code.chars() {
-        let current_pos = directional_keypad_position(current);
-        let c_pos = directional_keypad_position(c);
-
-        let (path, cost) = astar(
-            (current_pos, (1, 0)),
-            c_pos,
-            |pos| (c_pos, pos.0).distance() as i32,
-            |a, b| {
-                let dir = Point(b.0) - Point(a.0);
-
-                match dir {
-                    (1, 0) => 1,
-                    (-1, 0) => 1,
-                    (0, 1) => 2,
-                    (0, -1) => 2,
-                    _ => panic!(),
-                }
-            },
-            |(pos, dir)| {
-                vec![
-                    (Point(pos) + Point((0, 1)), dir),
-                    (Point(pos) + Point((0, -1)), dir),
-                    (Point(pos) + Point((1, 0)), dir),
-                    (Point(pos) + Point((-1, 0)), dir),
-                ]
-                .iter()
-                .filter(|(pos, _)| *pos != (0, 0))
-                .cloned()
-                .collect_vec()
-            },
-        )
-        .unwrap();
-
-        for ((pos, _), (pos2, _)) in path.iter().zip(path.iter().skip(1)) {
-            let dir = Point(*pos2) - Point(*pos);
-            let direction_char = match dir {
-                (1, 0) => '>',
-                (-1, 0) => '<',
-                (0, 1) => 'v',
-                (0, -1) => '^',
-                _ => panic!(),
-            };
-
-            output.push(direction_char);
+        if n == 1 {
+            return result;
         }
 
-        output.push('A');
+        let mut g = 0;
+        if out.len() == 1 {
+            g += directional_keypad_mapping(out[0], out[0], n - 1, cache);
+        } else {
+            for (a, b) in iter::once('A').chain(out).tuple_windows() {
+                g += directional_keypad_mapping(a, b, n - 1, cache);
+            }
+        }
+        cache.insert((start, end, n), g);
 
-        current = c;
+        return g;
     }
 
-    output.into_iter().join("")
+    result
 }

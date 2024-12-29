@@ -31,8 +31,9 @@ fn main() {
     // days::Day18::perform();
     // days::Day19::perform();
     // days::Day20::perform();
-    // days::Day21::perform();
-    days::Day22::perform();
+    days::Day21::perform();
+    // days::Day22::perform();
+    // days::Day23::perform();
 }
 
 pub fn read_lines(filename: &str) -> io::Lines<io::BufReader<File>> {
