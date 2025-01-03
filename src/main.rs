@@ -11,30 +11,31 @@ mod days;
 mod utils;
 
 fn main() {
-    // days::Day1::perform();
-    // days::Day2::perform();
-    // days::Day3::perform();
-    // days::Day4::perform();
-    // days::Day5::perform();
-    // days::Day6::perform();
-    // days::Day7::perform();
-    // days::Day8::perform();
-    // days::Day9::perform();
-    // days::Day10::perform();
-    // days::Day11::perform();
-    // days::Day12::perform();
-    // days::Day13::perform();
-    // days::Day14::perform();
-    // days::Day15::perform();
-    // days::Day16::perform();
-    // days::Day17::perform();
-    // days::Day18::perform();
-    // days::Day19::perform();
-    // days::Day20::perform();
-    // days::Day21::perform();
-    // days::Day22::perform();
-    // days::Day23::perform();
+    days::Day1::perform();
+    days::Day2::perform();
+    days::Day3::perform();
+    days::Day4::perform();
+    days::Day5::perform();
+    days::Day6::perform();
+    days::Day7::perform();
+    days::Day8::perform();
+    days::Day9::perform();
+    days::Day10::perform();
+    days::Day11::perform();
+    days::Day12::perform();
+    days::Day13::perform();
+    days::Day14::perform();
+    days::Day15::perform();
+    days::Day16::perform();
+    days::Day17::perform();
+    days::Day18::perform();
+    days::Day19::perform();
+    days::Day20::perform();
+    days::Day21::perform();
+    days::Day22::perform();
+    days::Day23::perform();
     days::Day24::perform();
+    days::Day25::perform();
 }
 
 pub fn read_lines(filename: &str) -> io::Lines<io::BufReader<File>> {
